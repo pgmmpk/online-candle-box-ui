@@ -16,7 +16,7 @@ async function preload() {
 
 async function createOrder() {
     const order = await api('api/orders/create');
-    push(`/orders/${order.id}`)
+    push(`/order/${order.id}`)
 }
 </script>
 

@@ -38,6 +38,12 @@
         <h1 class="text-gray-900 text-2xl title-font font-medium mb-4">
           {header} #{order.id}
         </h1>
+        {#if order.createdBy}
+        <div class="flex border-t border-gray-200 py-1">
+          <span class="text-gray-500">Created</span>
+          <span class="ml-auto text-gray-900">by {order.createdBy} on {fmtDate(order.timestamp)}</span>
+        </div>
+        {/if}
         <div class="flex border-t border-gray-200 py-1">
           <span class="text-gray-500">From</span>
           <span class="ml-auto text-gray-900">{fmtDate(order.fromDate)}</span>
