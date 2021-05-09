@@ -56,7 +56,7 @@ export const createPdf = ({ order, user }) => {
                     widths: ['*', 'auto'],
                     body: [
                         ['Gross', `$${(+order.gross).toFixed(2)}`],
-                        ['Created:', fmtDate(order.timestamp)],
+                        ['Created:', `By ${order.createdBy} on ${fmtDate(order.timestamp)}`],
                         ['Period:', `${fmtDate(order.fromDate)} -- ${fmtDate(order.toDate)}`],
                     ]
                 },
