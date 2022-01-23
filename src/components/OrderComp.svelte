@@ -15,7 +15,7 @@
   }
 
   function computeItemStats(items) {
-    const { take, place, living, deceased } = parseItems(items);
+    const { take, place, living, deceased, grossCandles } = parseItems(items);
     const quantity = {};
     const price = {};
 
@@ -25,10 +25,10 @@
       price[key] = (price[key] || 0) + +item.quantity * +item.price;
     }
 
-    return { quantity, price, take, place, living, deceased };
+    return { quantity, price, take, place, living, deceased, grossCandles };
   }
 
-  const { quantity, price, take, place, living, deceased } = computeItemStats(order.items);
+  const { quantity, price, take, place, living, deceased, grossCandles } = computeItemStats(order.items);
 </script>
 
 <section class="text-gray-600 body-font overflow-hidden">
@@ -70,7 +70,7 @@
         </div>
         <div class="flex">
           <span class="title-font font-medium text-2xl text-gray-900">
-            ${(+order.gross).toFixed(2)}
+            ${(+order.gross).toFixed(2)} (candles:&nbsp;${grossCandles.toFixed(2)}, names:&nbsp;${(+order.gross-grossCandles).toFixed(2)})
           </span>
           <button
             on:click

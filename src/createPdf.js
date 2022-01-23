@@ -19,6 +19,7 @@ export const parseItems = items => {
     };
     const living = [];
     const deceased = [];
+    let grossCandles = 0.;
     for (const item of items) {
         if (item.sku === 'names/living') {
             living.push(item.descr);
@@ -28,18 +29,19 @@ export const parseItems = items => {
             const [candleType, place] = item.sku.split('/');
             stats.place[`${place}/${candleType}`] = +item.quantity + (stats.place[`${place}/${candleType}`] || 0);
             stats.take[candleType] = +item.quantity + (stats.take[candleType] || 0);
+            grossCandles += +item.quantity * item.price;
         }
     }
     const take = Object.keys(stats.take).sort().map(x => ({ name: x, quantity: stats.take[x] }));
     const place = Object.keys(stats.place).sort().map(x => ({ name: x, quantity: stats.place[x] }));
 
     return {
-        take, place, living, deceased
+        take, place, living, deceased, grossCandles,
     };
 };
 
 export const createPdf = ({ order, user }) => {
-    const { take, place, living, deceased } = parseItems(order.items);
+    const { take, place, living, deceased, grossCandles } = parseItems(order.items);
 
     const docDefinition = {
         info: {
@@ -55,7 +57,7 @@ export const createPdf = ({ order, user }) => {
                     headerRows: 0,
                     widths: ['*', 'auto'],
                     body: [
-                        ['Gross', `$${(+order.gross).toFixed(2)}`],
+                        ['Gross:', `$${(+order.gross).toFixed(2)} (candles: $${grossCandles.toFixed(2)}, names: $${(+order.gross-grossCandles).toFixed(2)})`],
                         ['Created:', `By ${order.createdBy} on ${fmtDate(order.timestamp)}`],
                         ['Period:', `${fmtDate(order.fromDate)} -- ${fmtDate(order.toDate)}`],
                     ]
